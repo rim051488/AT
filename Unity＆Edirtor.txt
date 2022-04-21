@@ -1,0 +1,35 @@
+https://itch.io/
+
+https://github.com/IndieVisualLab/
+UnityGraphicsProgrammingSeries
+
+
+HightMap(高さマップ)
+(おそらく)スプラトゥーンに使われてる
+
+
+ComputeShaderとは…
+ふつうのシェーダは画像を表示するためにある
+
+シェーダは…特に頂点SとピクセルSは
+画像を表示する流れの上にある。
+
+ところがComputeShaderは、画像とか関係なく
+配列(GPU)の内容を操作するためのもの
+
+GPUは並列演算が超得意(１個１個は単純な計算)
+
+派手に見せる方法←エフェクト
+
+3Dやリアルめの2D←Effekseer
+ドット絵←PixelFXDesiner フリーのアセット
+			Prominence(フリー)
+制作の時間がない場合はプライドを捨てて
+			出来合いのものを使いましょう。
+
+
+
+Unityから開いたVisualStudioのインテリセンスが
+聞かない場合、Edit->Preferencesの
+ExternalEditor→ExternalScriptEditorで、
+今使ってるVisualStudio(2022)に合わせる
