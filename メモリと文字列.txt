@@ -1,0 +1,51 @@
+リトルエンディアン(Win)
+ビッグエンディアン(Mac)
+
+コンピュータ(CPU)の歴史がかかわってる。
+もともと単位が1byteずつ。
+00～ff 8ビット時代
+0000～ffff 16ビット時代
+00000000～ffffffff 32ビット時代
+
+
+12 34 56 78(little)
+
+56 78 12 34
+
+78 56 34 12
+
+
+c++のstring
+#include<string>
+
+string str;
+
+std::stringは、実はstd::vector<char>です。
+なんだけど、文字列として使いやすいように
+関数が追加されてる
++ == などの演算子オーバーロードが追加
+substr(): 文字列の一部を抜き出す
+ c_str() , length() , data(),
+ find(),rfind()
+ などが
+ある。
+
+char str[7];
+strcpy(str,"abcdef",sizeof(str));
+
+if("abcdef"==str){
+}
+
+
+std::vector<T> data;って
+一言でいうと「動的配列」
+
+data.push_back(16);
+
+std::vector<CTest> data;
+data.pusn_back(CTest("name"));
+data.emplace_back("name");
+
+data.reserve()
+data.resize
+
