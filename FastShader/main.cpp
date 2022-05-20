@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void MyDrawGraph(int x, int y, int imghandle,int secondImg,int pshandle) {
+void MyDrawGraph(int x, int y, int imghandle,int secondImg,int thirdIng,int pshandle) {
 	int width, haight;
 	GetGraphSize(imghandle,&width,&haight);
 	array<VERTEX2DSHADER, 4> verts;
@@ -36,10 +36,12 @@ void MyDrawGraph(int x, int y, int imghandle,int secondImg,int pshandle) {
 	int alphamode, alphaparam;
 	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 255);
 	GetDrawAlphaTest(&alphamode,&alphaparam);
-	//GetDrawAlphaTest(DX_CMP_GREATER, 0);
+	//SetDrawAlphaTest(DX_CMP_GREATER, 0);
+	//SetUseAlphaTest(true);
 	SetUsePixelShader(pshandle);
 	SetUseTextureToShader(0, imghandle);
 	SetUseTextureToShader(1, secondImg);
+	SetUseTextureToShader(2, thirdIng);
 	DrawPrimitive2DToShader(verts.data(), verts.size(), DX_PRIMTYPE_TRIANGLESTRIP);
 }
 
@@ -49,17 +51,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	DxLib_Init();
 	SetDrawScreen(DX_SCREEN_BACK);
 	int img = LoadGraph(L"zinbutu.png");
-	int ptn = LoadGraph(L"ptn.png");
+	int ptn = LoadGraph(L"carbon_pattern.png");
+	int noimg = LoadGraph(L"zinbutu_n.png");
 	int bg = LoadGraph(L"huukei.png");
 	int pps = LoadPixelShader(L"PixelShader.pso");
 	//int ps = LoadPixelShader(L"test.pso");
 
-	// 定数バッファの確保
+	// 定数バッファの確保(VRAM上)
 	int cbuff = DxLib::CreateShaderConstantBuffer(sizeof(float) * 4);
+	// グラボのメモリは直接いじれない
+	// RAM上のメモリでシュミレートする
 	float* threshold = static_cast<float*>(DxLib::GetBufferShaderConstantBuffer(cbuff));
-	float t = 0.5f;
+	float t = 0.0f;
+	float angle = 0.0f;
 	char keystate[256];
 	while (ProcessMessage() != -1) {
+		angle += 0.05f;
 		GetHitKeyStateAll(keystate);
 		if (keystate[KEY_INPUT_UP]){
 			t -= 0.01f;
@@ -72,9 +79,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		//DrawGraph(0, 0, img, true);
 		//MyDrawGraph(0, 0, img, ps);
 		threshold[0] = t;
+		threshold[1] = angle;
 		UpdateShaderConstantBuffer(cbuff);
 		SetShaderConstantBuffer(cbuff, DX_SHADERTYPE_PIXEL, 0);
-		MyDrawGraph(20, 0, img,ptn ,pps);
+		MyDrawGraph(20, 0, img,ptn,noimg ,pps);
 		ScreenFlip();
 	}
 	DxLib_End();
