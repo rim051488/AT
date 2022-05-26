@@ -31,9 +31,10 @@ PS_OUTPUT main(PS_INPUT input) {
 		// ここをコメントアウトするとスキャンみたいなことができる
 		discard;
 	}
+	// ノーマルマップ
 	float3 lightVec = float3(cos(angle), -sin(angle), 0.5);
 	lightVec = normalize(lightVec);
-	float3 normal=norm.Sample(sam, input.uv).rgb;
+	float3 normal=norm.Sample(sam, input.uv).rgb;// nx,ny,nz
 	normal = (normal * 2) - 1;
 	normal = normalize(normal);
 	normal.z = -normal.z;
@@ -46,11 +47,16 @@ PS_OUTPUT main(PS_INPUT input) {
 	if (col.a == 0.0) {
 		discard;// なかったことにする
 	}
-	float edge = 1.0 - saturate(abs(threshold - discval));
-	edge = saturate((1.0 - abs(input.uv.y + (yedge * discval) - threshold)));
+	//float edge = 1.0 - saturate(abs(threshold - discval));
+	float edge = saturate((1.0 - abs(input.uv.y + (yedge * discval) - threshold)));
 	edge = pow(edge, 15);
 	//output.color.rgb = 1.0 - col.rgb;
+	//float mx = fmod(input.uv.x, 0.1) * 10;
+	//float my = fmod(input.uv.y, 0.1) * 10;
+	float m = fmod(input.uv.x+input.uv.y, 0.1) * 10;
 	output.color.rgb = float3(1, 0, 1) * edge +
-		(output.color.rgb* bright) * (1.0 - edge);
+		(output.color.rgb* bright*m) * (1.0 - edge);
+	//output.color.rgb = float3(1, 0, 1) * edge +
+	//	(output.color.rgb* bright*mx * my) * (1.0 - edge);
 	return output;
 }

@@ -14,19 +14,21 @@ void MyDrawGraph(int x, int y, int imghandle,int secondImg,int thirdIng,int psha
 		v.su = 0.0f;
 		v.sv = 0.0f;
 		v.pos.z = 0.0f;
-		v.u = 0.0f;
-		v.v = 0.0f;
 	}
 	// ç∂è„
 	verts[0].pos.x = x;
 	verts[0].pos.y = y;
-	// âEè„
+	verts[0].u = 0.0f;
+	verts[0].v = 0.0f;
+// âEè„
 	verts[1].pos.x = x+width;
 	verts[1].pos.y = y;
 	verts[1].u = 1.0f;
+	verts[1].v = 0.0f;
 	// ç∂â∫
 	verts[2].pos.x = x;
 	verts[2].pos.y = y+haight;
+	verts[2].u = 0.0f;
 	verts[2].v = 1.0f;
 	// âEâ∫
 	verts[3].pos.x = x+width;
@@ -36,8 +38,8 @@ void MyDrawGraph(int x, int y, int imghandle,int secondImg,int thirdIng,int psha
 	int alphamode, alphaparam;
 	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 255);
 	GetDrawAlphaTest(&alphamode,&alphaparam);
-	//SetDrawAlphaTest(DX_CMP_GREATER, 0);
-	//SetUseAlphaTest(true);
+	SetDrawAlphaTest(DX_CMP_GREATER, 0);
+	SetUseAlphaTestFlag(true);
 	SetUsePixelShader(pshandle);
 	SetUseTextureToShader(0, imghandle);
 	SetUseTextureToShader(1, secondImg);
@@ -51,7 +53,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	DxLib_Init();
 	SetDrawScreen(DX_SCREEN_BACK);
 	int img = LoadGraph(L"zinbutu.png");
-	int ptn = LoadGraph(L"carbon_pattern.png");
+	int ptn = LoadGraph(L"ptn13.png");
+	//int ptn = LoadGraph(L"carbon_pattern.png");
 	int noimg = LoadGraph(L"zinbutu_n.png");
 	int bg = LoadGraph(L"huukei.png");
 	int pps = LoadPixelShader(L"PixelShader.pso");
@@ -66,7 +69,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	float angle = 0.0f;
 	char keystate[256];
 	while (ProcessMessage() != -1) {
-		angle += 0.05f;
+		//angle += 0.05f;
 		GetHitKeyStateAll(keystate);
 		if (keystate[KEY_INPUT_UP]){
 			t -= 0.01f;
@@ -75,7 +78,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 			t += 0.01f;
 		}
 		ClearDrawScreen();
-		DrawGraph(70, 0, bg, true);
+		//DrawGraph(70, 0, bg, true);
 		//DrawGraph(0, 0, img, true);
 		//MyDrawGraph(0, 0, img, ps);
 		threshold[0] = t;
