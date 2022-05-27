@@ -51,14 +51,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 {
 	ChangeWindowMode(true);
 	DxLib_Init();
-	SetDrawScreen(DX_SCREEN_BACK);
 	int img = LoadGraph(L"zinbutu.png");
-	int ptn = LoadGraph(L"ptn13.png");
-	//int ptn = LoadGraph(L"carbon_pattern.png");
+	//int ptn = LoadGraph(L"ptn2.png");
+	//int ptn = LoadGraph(L"ptn13.png");
+	int ptn = LoadGraph(L"carbon_pattern.png");
 	int noimg = LoadGraph(L"zinbutu_n.png");
 	int bg = LoadGraph(L"huukei.png");
-	int pps = LoadPixelShader(L"PixelShader.pso");
-	//int ps = LoadPixelShader(L"test.pso");
+	//int pps = LoadPixelShader(L"PixelShader.pso");
+	int pps = LoadPixelShader(L"test.pso");
+	int psPP = LoadPixelShader(L"PostProcess.pso");
+	int imgPP = LoadGraph(L"CrackNormalMap.png");
 
 	// 定数バッファの確保(VRAM上)
 	int cbuff = DxLib::CreateShaderConstantBuffer(sizeof(float) * 4);
@@ -68,8 +70,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	float t = 0.0f;
 	float angle = 0.0f;
 	char keystate[256];
+	int sw, sh;
+	GetDrawScreenSize(&sw,&sh);
+	int handleForPP = MakeScreen(sw, sh);
+	int shakeTime = 0;
 	while (ProcessMessage() != -1) {
-		//angle += 0.05f;
+		SetDrawScreen(handleForPP);
+		angle += 0.05f;
 		GetHitKeyStateAll(keystate);
 		if (keystate[KEY_INPUT_UP]){
 			t -= 0.01f;
@@ -77,15 +84,29 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 		if (keystate[KEY_INPUT_DOWN]){
 			t += 0.01f;
 		}
+		if (keystate[KEY_INPUT_SPACE]) {
+			shakeTime = 60;
+		}
+		if (shakeTime > 0) {
+			--shakeTime;
+		}
+		//SetDrawScreen(DX_SCREEN_BACK);
 		ClearDrawScreen();
 		//DrawGraph(70, 0, bg, true);
-		//DrawGraph(0, 0, img, true);
-		//MyDrawGraph(0, 0, img, ps);
 		threshold[0] = t;
 		threshold[1] = angle;
 		UpdateShaderConstantBuffer(cbuff);
 		SetShaderConstantBuffer(cbuff, DX_SHADERTYPE_PIXEL, 0);
 		MyDrawGraph(20, 0, img,ptn,noimg ,pps);
+
+		SetDrawScreen(DX_SCREEN_BACK);
+		ClsDrawScreen();
+		// モノトーンとなる
+		//GraphFilter(handleForPP, DX_GRAPH_FILTER_MONO,-60,7);
+		// ガウスフィルターだと（ぼかし）
+		//GraphFilter(handleForPP, DX_GRAPH_FILTER_GAUSS, 32, 1000);
+		//DrawRotaGraph(320, 240,1,0, handleForPP, false);
+		MyDrawGraph(0, 0, handleForPP, imgPP, -1, psPP);
 		ScreenFlip();
 	}
 	DxLib_End();

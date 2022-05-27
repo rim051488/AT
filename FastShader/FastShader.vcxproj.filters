@@ -23,5 +23,6 @@
     <FxCompile Include="test.hlsl" />
     <FxCompile Include="PixelShader.hlsl" />
     <FxCompile Include="PixelShader1.hlsl" />
+    <FxCompile Include="PostProcess.hlsl" />
   </ItemGroup>
 </Project>
