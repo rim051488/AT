@@ -8,10 +8,10 @@ struct VertexInput {
 };
 
 cbuffer BaseCBuffer : register(b1) {
-	float4 AntiViewportM[4];//4*4
-	float4 ProjectionM[4];//4*4
-	float4 ViewM[3];//4*3(カメラ)
-	float4 localM[3];//4*3(回転拡縮平行移動)
+	matrix AntiViewportM;//4*4ビューポート逆行列
+	matrix ProjectionM;//プロジェクション行列
+	float4x3 viewM;//4*3(ビュー行列)
+	float4x3 localM;//4*3(回転拡縮平行移動)
 	float4 ToonOutLineSize;// トゥーンの輪郭線の大きさ
 	float DiffuseSource; //ディフューズカラー(0.0f:マテリアル 1.0f : 頂点)
 	float SpecularSource;// スペキュラカラー(0.0f:マテリアル 1.0f : 頂点)
@@ -24,6 +24,7 @@ struct VSOutput {
 	float3 pos:POSITION;
 	float3 norm:normal;
 	float2 uv:TECOORD;
+	float3 col:COLOR0;
 };
 
 VSOutput main(VertexInput input)
@@ -31,21 +32,16 @@ VSOutput main(VertexInput input)
 	VSOutput output;
 	float4 pos = float4(input.pos,1);
 
-	pos.x = dot(pos, localM[0]);
-	pos.y = dot(pos, localM[1]);
-	pos.z = dot(pos, localM[2]);
+	pos.xyz = mul(pos, localM);
+	pos.xyz = mul(pos, viewM);
+	pos = mul(pos, ProjectionM);
 
-	pos.x = dot(pos, ViewM[0]);
-	pos.y = dot(pos, ViewM[1]);
-	pos.z = dot(pos, ViewM[2]);
+	float3 norm = mul(input.norm, localM);
 
-	pos.x = dot(pos, ProjectionM[0]);
-	pos.y = dot(pos, ProjectionM[1]);
-	pos.z = dot(pos, ProjectionM[2]);
-	pos.w = dot(pos, ProjectionM[3]);
 	output.svpos = pos;
 	output.pos = input.pos;
 	output.uv = input.uv0.xy;
-	output.norm = input.norm;
+	output.col = input.diffuse.xyz;
+	output.norm = normalize(norm);
 	return output;
 }
