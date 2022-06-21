@@ -5,6 +5,8 @@ struct VertexInput {
 	float4 specular : COLOR1;
 	float4 uv0 : TEXCOORD0;
 	float4 uv1 : TEXCOORD1;
+	float3 tangent:TANGENT;//接ベクトル
+	float3 binormal:BINORMAL;//従法線
 };
 
 cbuffer BaseCBuffer : register(b1) {
@@ -22,9 +24,11 @@ cbuffer BaseCBuffer : register(b1) {
 struct VSOutput {
 	float4 svpos:SV_POSITION;
 	float3 pos:POSITION;
-	float3 norm:normal;
+	float3 norm:NORMAL;
 	float2 uv:TECOORD;
 	float3 col:COLOR0;
+	float3 tan:TANGENT;
+	float3 bin:BINORMAL;
 };
 
 VSOutput main(VertexInput input)
@@ -32,16 +36,21 @@ VSOutput main(VertexInput input)
 	VSOutput output;
 	float4 pos = float4(input.pos,1);
 
-	pos.xyz = mul(pos, localM);
-	pos.xyz = mul(pos, viewM);
-	pos = mul(pos, ProjectionM);
+	pos.xyz = mul(pos, localM);//ワールド
+	pos.xyz = mul(pos, viewM);//ビュー
+	pos = mul(pos, ProjectionM);//プロジェクション
 
+	//法線にも回転成分は乗算しよう
 	float3 norm = mul(input.norm, localM);
+	float3 tan = mul(input.tangent, localM);
+	float3 bin = mul(input.binormal, localM);
 
 	output.svpos = pos;
 	output.pos = input.pos;
 	output.uv = input.uv0.xy;
-	output.col = input.diffuse.xyz;
 	output.norm = normalize(norm);
+	output.col = input.diffuse.rgb;
+	output.tan = normalize(tan);
+	output.bin = normalize(bin);
 	return output;
 }
