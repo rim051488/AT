@@ -1,5 +1,9 @@
 #include <DxLib.h>
 #include <memory>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 #include "KeyConfig.h"
 
 #define KEY_CON			"keyconfig.txt"			// キーコンフィグデータのファイル名
@@ -43,7 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	controller_ = std::make_unique<KeyConfig>();
 	controller_->Init();
 	// キーコンフィグファイルの読み込み
-	if (controller_->Load(KEY_CON) == false)
+	if (controller_->Load("keyconfig.txt") == false)
 	{
 		// コンフィグファイルが読み込めなかったらデフォルトに設定にする
 		controller_->SetDefault();
@@ -52,7 +56,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	InputWait = false;
 	while (ProcessMessage() == 0)
 	{
+
 		ClsDrawScreen();
+		//std::ifstream file("keyconfig.txt");  // 読み込むファイルのパスを指定
+		//std::string line;
+
+		//while (std::getline(file, line)) {  // 1行ずつ読み込む
+		//	DrawFormatString(0, 0, 0xffffff, "%s", line);
+		//}
+
 		controller_->InputProcess();
 		// フラグが立っているかどうか
 		if (InputWait)
@@ -90,6 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawY += INFO_SPACE;
 		}
 		ScreenFlip();
+
 		if (TargetIndex == KEYCONFIG_INPUT_NUM)
 		{
 			break;
