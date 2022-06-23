@@ -150,12 +150,14 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputConfig.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SettingWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputConfig.h" />
     <ClInclude Include="InputID.h" />
     <ClInclude Include="InputMng.h" />
+    <ClInclude Include="SettingWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
