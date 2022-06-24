@@ -12,9 +12,12 @@ SamplerState sam:register(s0);
 Texture2D<float4> tex:register(t0);
 
 Texture2D<float4> norm:register(t1);
+Texture2D<float4> rough:register(t2);
+Tecture2D<float4> sph:register(t3);
 
 float4 main(PSInput input) : SV_TARGET
 {
+	float rgh =  rough.Sample(sam,input.uv).r;
 	float3 light = float3(1,-1,1);//光ベクトル
 	float3 ray = float3(0, 0, 1);//視線ベクトル
 	light = normalize(light);
@@ -39,5 +42,6 @@ float4 main(PSInput input) : SV_TARGET
 
 	float3 col = tex.Sample(sam, input.uv).xyz;
 	col *= input.col;
-	return float4(col * b + spec, 1.0f);
+	float3 rgb = lerp( col * b, spec,rgh)
+	return float4(rgb, 1.0f);
 }

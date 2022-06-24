@@ -6,10 +6,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	{
 		return 0;
 	}
-	//SetCameraNearFar(1.0, 500.0f);
-	int model = MV1LoadModel(L"Model/model.mv1");
-	//int model = MV1LoadModel(L"Model/bodyeater_bk.mv1");
+	//int model = MV1LoadModel(L"Model/model.mv1");
+	int model = MV1LoadModel(L"pbrmodel/sphere.mv1");
 	//int sphere = MV1LoadModel(L"Model/sphere.mqo");
+	int rough = LoadGraph(L"pbrmodel/roughness.png");
+	int rough = LoadGraph(L"pbrmodel/sph.png");
 	int ps = LoadPixelShader(L"ps.pso");
 	int vs = LoadVertexShader(L"vs.vso");
 	auto tlNum = MV1GetTriangleListNum(model);
@@ -31,6 +32,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		angle += 0.01f;
 		SetDrawScreen(rt);
 		//SetDrawScreen(DX_SCREEN_BACK);
+		SetCameraNearFar(1.0, 500.0f);
+		SetCameraPositionAndTargetAndUpVec(VGet(0, 0, -400), VGet(0, 0, 0), VGet(0, 1, 0));
 		ClsDrawScreen();
 		if (tlVertType == DX_MV1_VERTEX_TYPE_1FRAME) {
 			DrawString(0,0,L"not normal not skinning",0xffffff);
@@ -61,7 +64,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		SetUseVertexShader(vs);
 		SetUsePixelShader(ps);
 		//SetCameraPositionAndTargetAndUpVec(VGet(0, 0, -50), VGet(0, 0, 0), VGet(0, 1, 0));
-		SetCameraPositionAndTargetAndUpVec(VGet(0, 0, -400), VGet(0, 0, 0), VGet(0, 1, 0));
 		MV1SetRotationXYZ(model, VGet(0, angle, 0));
 		MV1DrawModel(model);
 		SetDrawScreen(DX_SCREEN_BACK);
