@@ -13,7 +13,7 @@ Texture2D<float4> tex:register(t0);
 
 Texture2D<float4> norm:register(t1);
 Texture2D<float4> rough:register(t2);
-Tecture2D<float4> sph:register(t3);
+Texture2D<float4> sph:register(t3);
 
 float4 main(PSInput input) : SV_TARGET
 {

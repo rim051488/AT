@@ -1,0 +1,40 @@
+範囲 = rand()%n
+
+#include<random>
+std::mt19937 mt;//メルセンヌツイスタ
+
+
+ランダムシードのとりかた
+srand(GetTickCount());
+
+std::random_device rd;
+ハードウェアの状態から乱数を作る
+開始マイクロ秒から宇宙線ノイズを考慮した
+ランダムを発生する(本気のランダム)
+
+疑似乱数(乱数に見えるけど実は周期性がある)
+最近のmtやxorshiftは十分周期が長いので気にしない
+ただし、シードは疑似じゃない乱数を使いたい
+ということで、
+random_device rd;
+mt19937 mt(rd());
+mt();
+uniform_int_distribution<int> rangeI(10,100);
+rangeI(mt);
+uniform_real_distribution
+
+frac→割った余りを出す
+
+random_deviceはクッソ重いので、最初のシード値にだけ
+使用し、後は疑似乱数を使う
+
+ちなみに、GPU上で乱数を使う場合はrandom関数がありません
+なので、疑似乱数生成機としてfrac(sin(?)*でけえ数)
+
+この辺を多重にやることを利用しているのが
+「ドメインワープ」
+
+パリティチェック
+10+3
+490941108847 7
+*1+*3*1+*3...=%10=7
